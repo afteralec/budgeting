@@ -5,13 +5,15 @@ module UserInterface
     first_name = prompt.ask('Please say your first name:', modify: :collapse)
     last_name = prompt.ask('Great, and your last name?', modify: :collapse)
 
-    email_quest = 'Thanks! Now your email address:'
+    email_quest = 'Thanks! Now your email address:'  
+    exit_string = "Press enter to go back."
     email_verified = false
     until email_verified do
-      email = prompt.ask(email_quest) do |a|
+      email = prompt.ask(email_quest,default: exit_string) do |a|
         a.validate :email
         a.modify :down
       end
+      break if email == exit_string      
       email_quest = 'Sorry! Please enter your email address again:'
       email_verified = prompt.select("Great! I have your email as #{email}. Is that right?", cycle: :true) do |s|
         s.choice 'Yep!', true
@@ -24,6 +26,12 @@ module UserInterface
         sleep 1
       end
     end
+
+    if email == exit_string
+      self.open_window("main_menu")
+      return 
+    end
+   
 
     self.user = User.create(first_name: first_name, last_name: last_name, email: email)
 
