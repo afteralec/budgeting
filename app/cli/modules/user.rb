@@ -9,11 +9,12 @@ module UserInterface
     exit_string = "Press enter to go back."
     email_verified = false
     until email_verified do
-      email = prompt.ask(email_quest,default: exit_string) do |a|
-        a.validate :email
-        a.modify :down
-      end
-      break if email == exit_string      
+      email = prompt.ask(email_quest, default: exit_string)
+
+      ## Add email validation and sanitizing here
+
+      break if email == exit_string
+
       email_quest = 'Sorry! Please enter your email address again:'
       email_verified = prompt.select("Great! I have your email as #{email}. Is that right?", cycle: :true) do |s|
         s.choice 'Yep!', true
@@ -31,7 +32,6 @@ module UserInterface
       self.open_window("main_menu")
       return 
     end
-   
 
     self.user = User.create(first_name: first_name, last_name: last_name, email: email)
 
